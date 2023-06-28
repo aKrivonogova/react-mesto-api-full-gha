@@ -1,0 +1,32 @@
+.form__input {
+    outline: none;
+    width: 358px;
+    border: none;
+    margin-bottom: 29px;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+    padding: 0 0 10px 0;
+}
+
+.form__input::placeholder {
+    color: #C4C4C4;
+}
+
+.form__input:last-of-type {
+    margin-bottom: 47px;
+}
+
+@media (max-width: 600px) {
+    .form__input {
+        width: 238px;
+    }
+
+    .form__input:last-of-type {
+        margin-bottom: 44px;
+    }
+}

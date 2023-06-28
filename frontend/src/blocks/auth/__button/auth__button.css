@@ -1,0 +1,22 @@
+.auth__button {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border-radius: 2px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: #000000;
+}
+
+.auth__button:hover {
+    background: #FFFFFF;
+    opacity: 0.85;
+    transition: 0.3s;
+}

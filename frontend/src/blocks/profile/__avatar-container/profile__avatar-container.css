@@ -1,0 +1,11 @@
+.profile__avatar-container {
+    display: flex;
+    position: relative;
+}
+
+@media (max-width: 660px) {
+    .profile__avatar-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}

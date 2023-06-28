@@ -1,0 +1,15 @@
+.form__fieldset {
+    border: none;
+    margin-right: auto;
+    margin-left: auto;
+    width: 358px;
+    padding: 0;
+    position: relative;
+}
+
+
+@media (max-width: 600px) {
+    .form__fieldset {
+        width: 238px;
+    }
+}

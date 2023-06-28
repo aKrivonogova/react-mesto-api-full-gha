@@ -1,0 +1,14 @@
+.element {
+    background: #FFFFFF;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+@media (max-width: 600px) {
+    .element {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
