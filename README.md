@@ -11,6 +11,6 @@
 
 IP-адрес x.x.x.x
 
-Frontend https://...
+Frontend https://akrivonogova.nomoreparties.sbs
 
-Backend https://...
+Backend https://api.domainname.yandex.nomoreparties.sbs
