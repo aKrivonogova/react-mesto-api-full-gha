@@ -46,12 +46,15 @@ app.post('/signup', createUserValidation, createUser);
 
 app.use(auth);
 app.use('/', usersRoutes);
+
 app.use('/', cardsRoutes);
-app.use(errorLogger);
-app.use(errors());
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));
 });
+
+app.use(errorLogger);
+app.use(errors());
+
 app.use(defaultErrorHandler);
 app.listen(PORT, () => { });

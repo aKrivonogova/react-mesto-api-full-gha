@@ -5,11 +5,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
-const DefaultError = require('../errors/DefaultError');
 const DuplicateError = require('../errors/DuplicateError');
 const AuthError = require('../errors/AuthError');
+const ValidationError = require('../errors/ValidationError');
 
 const SOULT = 10;
 const STATUS_OK = 200;
@@ -33,12 +32,8 @@ const getUser = (req, res, next) => {
       }
       return res.status(STATUS_OK).send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Передан некорретный Id'));
-        return;
-      }
-      next(new DefaultError('на сервере произошла ошибка'));
+    .catch(() => {
+      next();
     });
 };
 
@@ -48,12 +43,8 @@ const updateUser = (req, res, next) => {
     .then((user) => {
       res.status(STATUS_OK).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Передан некорретные данные'));
-        return;
-      }
-      next(new DefaultError('на сервере произошла ошибка'));
+    .catch(() => {
+      next();
     });
 };
 
@@ -63,12 +54,8 @@ const updateUserAvatar = (req, res, next) => {
     .then((user) => {
       res.status(STATUS_OK).send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Передан некорретные данные'));
-        return;
-      }
-      next(new DefaultError('на сервере произошла ошибка'));
+    .catch(() => {
+      next();
     });
 };
 
@@ -89,13 +76,13 @@ const createUser = (req, res, next) => {
       });
     })
       .catch((err) => {
-        if (err.name === 'MongoServerError') {
+        if (err.name === 'MongoServerError' && err.statusCode === 1100) {
           return next(new DuplicateError('Пользователь с таким email уже существует'));
         }
         if (err.name === 'ValidationError') {
-          return next(new BadRequestError('Некорректные данные'));
+          return next(new ValidationError('Некорректные данные'));
         }
-        return next(new DefaultError('на сервере произошла ошибка'));
+        return next();
       });
   });
 };
@@ -110,7 +97,7 @@ const login = (req, res, next) => {
       });
     })
     .catch(() => {
-      next(new AuthError('Неверный логин или пароль.'));
+      next(new AuthError('неверный логин или пароль'));
     });
 };
 
@@ -123,11 +110,9 @@ const getCurrentUser = (req, res, next) => {
       res.status(STATUS_OK).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-      } else if (err.message === 'NotFound') {
-        next(new NotFoundError('Пользователь не найден'));
-      } else next(new DefaultError('на сервере произошла ошибка'));
+      if (err.message === 'NotFound') {
+        next(NotFoundError('Пользователь не найден'));
+      } else next();
     });
 };
 

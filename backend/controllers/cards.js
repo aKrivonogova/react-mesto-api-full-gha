@@ -2,10 +2,10 @@ const Card = require('../models/card');
 
 const STATUS_OK = 200;
 const STATUS_OK_CREATE = 201;
-const BadRequestError = require('../errors/BadRequestError');
+
 const NotFoundError = require('../errors/NotFoundError');
-const DefaultError = require('../errors/DefaultError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const ValidationError = require('../errors/ValidationError');
 
 // получить карточки
 const getCards = (req, res, next) => {
@@ -25,9 +25,9 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('переданы некорректные данные!'));
+        return next(new ValidationError('переданы некорректные данные!'));
       }
-      return next(new DefaultError('на сервере произошла ошибка!'));
+      return next();
     });
 };
 
@@ -42,7 +42,7 @@ const deleteCardById = (req, res, next) => {
       if (card.owner.toString() !== id) {
         throw new ForbiddenError('Нет прав для удаления карточки.');
       } else {
-        Card.findByIdAndDelete(req.params.id)
+        return Card.findByIdAndDelete(req.params.id)
           .then((deletedCard) => {
             res.status(STATUS_OK).send(deletedCard);
           });
@@ -65,9 +65,9 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('переданы некорректные данные!'));
+        return next(new ValidationError('переданы некорректные данные!'));
       }
-      return next(new DefaultError('на сервере произошла ошибка!'));
+      return next();
     });
 };
 
@@ -86,9 +86,9 @@ const deleteCardLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('переданы некорректные данные!'));
+        return next(new ValidationError('переданы некорректные данные!'));
       }
-      return next(new DefaultError('на сервере произошла ошибка!'));
+      return next();
     });
 };
 
