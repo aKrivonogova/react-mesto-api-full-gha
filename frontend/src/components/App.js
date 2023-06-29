@@ -44,15 +44,15 @@ function App() {
   const [isTooltipPopupOpen, setTooltipPopupOnen] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    api.getUserInfo(token)
+    const jwt = localStorage.getItem('jwt');
+    api.getUserInfo(jwt)
       .then((res) => {
         setCurrentUser(res);
-        console.log(res);
+        setLoggedIn(true);
       })
       .catch((error) => console.log(error));
 
-    api.getInitialCards(token)
+    api.getInitialCards(jwt)
       .then((res) => {
         setCards(res)
       })
@@ -81,19 +81,18 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
 
-    api.changeLikeCardStatus(card._id, isLiked)
-      .then((res) => {
-        setCards((state) =>
-          state.map((c) => (c._id === card._id ? res : c))
-        );
+    api.changeLikeCardStatus(card._id, isLiked, localStorage.jwt).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    })
+      .catch((err) => {
+        console.log(err)
       })
-      .catch(error => console.log(`error: ${error}`));
   }
 
   function handleCardDelete(card) {
-    api.deleteCard(card._id, localStorage.token)
+    api.deleteCard(card._id, localStorage.jwt)
       .then((res) => {
         setCards((state) => state.filter((c) => c._id !== card._id));
       })
@@ -101,7 +100,7 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    api.setUserInfoByAPI(data, localStorage.token)
+    api.setUserInfoByAPI(data, localStorage.jwt)
       .then(res => {
         setCurrentUser(res);
         closeAllPopups();
@@ -110,7 +109,7 @@ function App() {
   }
 
   function handleUpdateAvatar(avatar) {
-    api.setUserAvatarByAPI(avatar, localStorage.token)
+    api.setUserAvatarByAPI(avatar, localStorage.jwt)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
@@ -119,7 +118,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(data) {
-    api.addCard(data, localStorage.token)
+    api.addCard(data, localStorage.jwt)
       .then(res => {
         setCards([res, ...cards]);
         closeAllPopups();
@@ -133,10 +132,9 @@ function App() {
       const jwt = localStorage.getItem('jwt');
       auth.getContent(jwt)
         .then(res => {
-          setEmail(res.data.email);
+          setEmail(res.email); //not a setEmail(res.data.email);
           setLoggedIn(true);
           navigate('/', { replace: true });
-          console.log(res.data);
         })
         .catch(err => console.log(err))
     }
@@ -155,6 +153,7 @@ function App() {
         })
         setTooltipPopupOnen(true);
         navigate('/sign-in', { replace: true });
+
       })
       .catch((err) => {
         setInfoTooltipMessage({
@@ -170,10 +169,11 @@ function App() {
       .then(res => {
         if (res.token) {
           localStorage.setItem('jwt', res.token);
-          console.log(res.token)
           setEmail(email);
           setLoggedIn(true);
+
           navigate('/', { replace: true });
+
         }
       })
       .catch(err => console.log(err))
@@ -184,7 +184,9 @@ function App() {
     localStorage.removeItem('jwt');
     setEmail('');
     setLoggedIn(false);
+
     navigate('/sign-in', { replace: true });
+
   }
 
   return (

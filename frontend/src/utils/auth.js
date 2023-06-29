@@ -42,8 +42,5 @@ export const getContent = (token) => {
             Authorization: `Bearer ${token}`
         },
     })
-        .then(checkErrors)
-        .then((res) => {
-            console.log('текущий пользователь - ' + res)
-        })
+        .then(checkErrors);
 }

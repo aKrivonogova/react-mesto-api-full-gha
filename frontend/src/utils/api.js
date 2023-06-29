@@ -36,13 +36,19 @@ class Api {
             .then(this._checkErrors)
     }
 
-    changeLikeCardStatus(id, isLiked) {
+    changeLikeCardStatus(id, isLiked, token) {
         return fetch(this._url + `/cards/${id}/likes`, {
             method: isLiked ? 'DELETE' : 'PUT',
-            headers: this._headers
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
         })
             .then(this._checkErrors)
     }
+
+
     addCard(data, token) {
         return fetch(this._url + '/cards', {
             method: 'POST',
