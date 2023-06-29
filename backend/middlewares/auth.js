@@ -1,3 +1,4 @@
+const { SECRET } = process.env;
 // eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
 const AuthError = require('../errors/AuthError');
@@ -13,7 +14,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, SECRET);
   } catch (err) {
     return next(new AuthError('необходима авторизация!'));
   }

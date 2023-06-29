@@ -1,3 +1,4 @@
+const { SECRET } = process.env;
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -105,7 +106,7 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
-        token: jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' }),
+        token: jwt.sign({ _id: user._id }, SECRET, { expiresIn: '7d' }),
       });
     })
     .catch(() => {
