@@ -1,8 +1,10 @@
 const express = require('express');
 const { errors } = require('celebrate');
 const cors = require('cors');
+// eslint-disable-next-line import/no-extraneous-dependencies
+require('dotenv').config();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, FRONTEND_ORIGIN: frontendOrigin = 'http://localhost:3000' } = process.env;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
@@ -17,7 +19,7 @@ const auth = require('./middlewares/auth');
 
 const options = {
   origin: [
-    'http://localhost:3001',
+    frontendOrigin,
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,

@@ -1,3 +1,5 @@
+const {REACT_APP_BASE_URL_LINK: BASE_URL } = process.env;
+
 class Api {
     constructor(options) {
         this._headers = options.headers;
@@ -111,5 +113,5 @@ class Api {
 
 
 export default new Api({
-    url: 'http://localhost:3000'
+    url: BASE_URL
 })

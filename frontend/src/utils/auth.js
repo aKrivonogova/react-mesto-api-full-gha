@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000';
+const {REACT_APP_BASE_URL_LINK: BASE_URL } = process.env;
 
 export const checkErrors = (res) => {
     if (res.ok) {
