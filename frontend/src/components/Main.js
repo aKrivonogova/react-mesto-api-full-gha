@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import Card from './Card'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 function Main({ handleEditAvatarClick, handleAddPlaceClick, handleEditProfileClick, onCardClick, cards, onCardLike, onCardDelete }) {

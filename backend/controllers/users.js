@@ -7,7 +7,6 @@ const User = require('../models/user');
 
 const NotFoundError = require('../errors/NotFoundError');
 const DuplicateError = require('../errors/DuplicateError');
-const AuthError = require('../errors/AuthError');
 const ValidationError = require('../errors/ValidationError');
 
 const SOULT = 10;
@@ -27,13 +26,13 @@ const getUsers = (req, res, next) => {
 const getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (user === null) {
+      if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
       return res.status(STATUS_OK).send({ data: user });
     })
-    .catch(() => {
-      next();
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -43,8 +42,8 @@ const updateUser = (req, res, next) => {
     .then((user) => {
       res.status(STATUS_OK).send(user);
     })
-    .catch(() => {
-      next();
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -54,8 +53,8 @@ const updateUserAvatar = (req, res, next) => {
     .then((user) => {
       res.status(STATUS_OK).send(user);
     })
-    .catch(() => {
-      next();
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -82,7 +81,7 @@ const createUser = (req, res, next) => {
         if (err.name === 'ValidationError') {
           return next(new ValidationError('Некорректные данные'));
         }
-        return next();
+        return next(err);
       });
   });
 };
@@ -96,8 +95,8 @@ const login = (req, res, next) => {
         token: jwt.sign({ _id: user._id }, SECRET, { expiresIn: '7d' }),
       });
     })
-    .catch(() => {
-      next(new AuthError('неверный логин или пароль'));
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -110,9 +109,7 @@ const getCurrentUser = (req, res, next) => {
       res.status(STATUS_OK).send(user);
     })
     .catch((err) => {
-      if (err.message === 'NotFound') {
-        next(NotFoundError('Пользователь не найден'));
-      } else next();
+      next(err);
     });
 };
 
